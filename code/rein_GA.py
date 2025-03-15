@@ -8,45 +8,7 @@ import copy
 import gym
 from gym import spaces
 
-def generate_sales_data_realistic(num_samples=2163, seed=42):
-    """
-    Generate 2163 samples of sales data with realistic behavior.
-    """
-    np.random.seed(seed)
-    weeks = np.arange(1, num_samples + 1)
-    
-    advertising_spend = np.random.randint(50, 300, size=num_samples)
-    competitor_price = np.random.randint(80, 150, size=num_samples)
-    unit_cost = np.random.randint(60, 120, size=num_samples)
-    price_level = np.random.randint(90, 200, size=num_samples)
-    
-    season_index = np.sin(2 * np.pi * weeks / 52) + np.random.normal(0, 0.3, num_samples)
-    
-    base_sales = (
-        300 + 0.9 * advertising_spend
-        - 0.5 * (price_level - competitor_price)
-        + 70 * season_index
-        - 1.2 * (unit_cost - 60)
-    )
-    noise = np.random.normal(0, 50, num_samples) + np.random.randint(-20, 20, size=num_samples)
-    sales = (base_sales + noise).clip(10, None).astype(int)
-    
-    df = pd.DataFrame({
-        "Week": weeks,
-        "AdvertisingSpend": advertising_spend,
-        "CompetitorPrice": competitor_price,
-        "UnitCost": unit_cost,
-        "PriceLevel": price_level,
-        "SeasonIndex": season_index,
-        "Sales": sales
-    })
-    return df
-
-df = generate_sales_data_realistic(num_samples=2163, seed=42)
-print (df.head(8))
-df.to_csv(r"C:\backupcgi\final_bak\RG.csv")
-
-
+# load data
 df = pd.read_csv("RG.csv")
 
 class SalesProfitEnv(gym.Env):
